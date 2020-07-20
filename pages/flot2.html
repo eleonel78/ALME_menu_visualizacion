@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="description" content="">
+        <meta name="author" content="">
+
+        <title>UNIR - Herramientas de Visualización</title>
+
+        <!-- Bootstrap Core CSS -->
+        <link href="../css/bootstrap.min.css" rel="stylesheet">
+
+        <!-- MetisMenu CSS -->
+        <link href="../css/metisMenu.min.css" rel="stylesheet">
+
+        <!-- Timeline CSS -->
+        <link href="../css/timeline.css" rel="stylesheet">
+
+        <!-- Custom CSS -->
+        <link href="../css/startmin.css" rel="stylesheet">
+
+        <!-- Morris Charts CSS -->
+        <link href="../css/morris.css" rel="stylesheet">
+
+        <!-- Custom Fonts -->
+        <link href="../css/font-awesome.min.css" rel="stylesheet" type="text/css">
+
+        <!-- Load Ajax Lib -->
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+
+        <!-- Load d3.js v3 -->
+        <script src="https://d3js.org/d3.v3.min.js"></script>
+
+        <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+        <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+        <!--[if lt IE 9]>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/respond.js/1.4.2/respond.min.js"></script>
+        <![endif]-->
+    </head>
+
+    <!-- Styles -->
+    <style>
+    body {
+        margin: 0px;
+        padding: 0px;
+        font-family: 'Avenir';
+      }
+
+      h1,
+      button {
+        margin-left: 25px;
+        text-align: left;
+      }
+
+      h1 {
+        font-size: 25px;
+      }
+
+      button {
+        margin-bottom: 25px;
+      }
+
+      .main {
+        margin: 0px 25px;
+      }
+
+      .main2 {
+        margin: 0px 25px;
+      }
+
+      svg {
+        padding: 0px 20px;
+      }
+
+      .axis path,
+      .axis line {
+        fill: none;
+        stroke: black;
+        shape-rendering: crispEdges;
+      }
+
+      text,
+      .axis text {
+        font-size: 12px;
+      }
+
+      rect:hover {
+        fill: orange;
+      }
+    </style>
+
+    <body>
+
+        <div id="wrapper">
+
+            <!------------- Barra de NAvegación ------------------------------------>
+            <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+                <div class="navbar-header">
+                    <a class="navbar-brand" href="index.html">Leonel Martínez</a>
+                </div>
+
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+
+                <ul class="nav navbar-nav navbar-left navbar-top-links">
+                    <li><a href="#"><i class="fa fa-home fa-fw"></i> Linkedin</a></li>
+                </ul>
+
+                <ul class="nav navbar-right navbar-top-links">
+                    <li class="dropdown navbar-inverse">
+                    </li>
+                    <li class="dropdown">
+
+                    </li>
+                </ul>
+
+                <!-- Barra Navegarodra de Opciones -->
+                <div class="navbar-default sidebar" role="navigation">
+                    <div class="sidebar-nav navbar-collapse">
+                        <ul class="nav" id="side-menu">
+                            <li>
+                                <a href="index.html"><i class="fa fa-dashboard fa-fw"></i> Tablero Principal: </a>
+                            </li>
+                            <li>
+                                <a href="#"><i class="fa fa-bar-chart-o fa-fw"></i> Charts<span class="fa arrow"></span></a>
+                                <ul class="nav nav-second-level">
+                                    <li>
+                                        <a href="flot2.html">Grafica D3</a>
+                                    </li>
+                                    <li>
+                                        <a href="flot1.html">Grafica D3-SVG</a>
+                                    </li>                                    
+                                </ul>
+                                <!-- /.nav-second-level -->
+                            </li>
+                            <li>
+                                <a href="tablas.html"><i class="fa fa-table fa-fw"></i> Tablas</a>
+                            </li>
+                            <li>
+
+                                <!-- /.nav-second-level -->
+                            </li>
+                        </ul>
+                    </div>
+                    <!-- /.sidebar-collapse -->
+                </div>
+                <!-- /.navbar-static-side -->
+            </nav>
+            <!---- Fin Barra Navegadora -------->
+
+
+            <div id="page-wrapper">
+                <div class="container-fluid">
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <h1 class="page-header">Seguimiento de actividad de COVID 19 TOP 20. Abril '20, por País</h1>
+                        </div>
+                        <!-- /.col-lg-12 -->
+                    </div>
+            
+            <!---------------------------------------------------------------------->
+            <!---------------------- Visualización de Datos ------------------------>
+            <!---------------------------------------------------------------------->
+            <!-- Casos de contagio -->
+            <div>
+                <div class="panel-heading">
+                    Top 20 casos de contagio
+                </div>
+                <div class="main">
+                  <p><span id="pais"></span> -\- <span id="Contagios"></span></p>
+                </div>
+
+                <script type="text/javascript">
+
+                  function render(){
+                    // Golden Snowglobe totals (as of 2/5/15)
+                    var dataset = [
+                      {"pais": "USA", "casos": 875289},
+                      {"pais": "GBR", "casos": 143080},
+                      {"pais": "ESP", "casos": 110916},
+                      {"pais": "TUR", "casos": 106762},
+                      {"pais": "ITA", "casos": 101852},
+                      {"pais": "RUS", "casos": 97563},
+                      {"pais": "DEU", "casos": 97206},
+                      {"pais": "FRA", "casos": 83892},
+                      {"pais": "BRA", "casos": 73583},
+                      {"pais": "IRN", "casos": 52162},
+                      {"pais": "CAN", "casos": 44163},
+                      {"pais": "BEL", "casos": 35960},
+                      {"pais": "PER", "casos": 32981},
+                      {"pais": "IND", "casos": 31799},
+                      {"pais": "NLD", "casos": 27052},
+                      {"pais": "ECU", "casos": 22709},
+                      {"pais": "SAU", "casos": 19949},
+                      {"pais": "PRT", "casos": 18284},
+                      {"pais": "IRL", "casos": 17343},
+                      {"pais": "MEX", "casos": 16705}
+
+                    ]
+                    //var data = d3.csv.parse(d3.select('#csv').text());
+
+                    // Dimensions for the chart: height, width, and space b/t the bars
+                    var margins = {top: 30, right: 50, bottom: 30, left: 50}
+                    var height = 400 - margins.left - margins.right,
+                        width = 700 - margins.top - margins.bottom,
+                        barPadding = 5
+
+                    // Create a scale for the y-axis based on data
+                    // >> Domain - min and max values in the dataset
+                    // >> Range - physical range of the scale (reversed)
+                    var yScale = d3.scale.linear()
+                      .domain([0, d3.max(dataset, function(d){
+                        return d.casos;
+                      })])
+                      .range([height, 0]);
+
+                    // Implements the scale as an actual axis
+                    // >> Orient - places the axis on the left of the graph
+                    // >> Ticks - number of points on the axis, automated
+                    var yAxis = d3.svg.axis()
+                      .scale(yScale)
+                      .orient('left')
+                      .ticks(5);
+
+                    // Creates a scale for the x-axis based on city names
+                    var xScale = d3.scale.ordinal()
+                      .domain(dataset.map(function(d){
+                        return d.pais;
+                      }))
+                      .rangeRoundBands([0, width], .1);
+
+                    // Creates an axis based off the xScale properties
+                    var xAxis = d3.svg.axis()
+                      .scale(xScale)
+                      .orient('bottom');
+
+                    // Creates the initial space for the chart
+                    // >> Select - grabs the empty <div> above this script
+                    // >> Append - places an <svg> wrapper inside the div
+                    // >> Attr - applies our height & width values from above
+                    var chart = d3.select('.main')
+                      .append('svg')
+                      .attr('width', width + margins.left + margins.right)
+                      .attr('height', height + margins.top + margins.bottom)
+                      .append('g')
+                      .attr('transform', 'translate(' + margins.left + ',' + margins.top + ')');
+
+                    // For each value in our dataset, places and styles a bar on the chart
+
+                    // Step 1: selectAll.data.enter.append
+                    // >> Loops through the dataset and appends a rectangle for each value
+                    chart.selectAll('rect')
+                      .data(dataset)
+                      .enter()
+                      .append('rect')
+
+                      // Step 2: X & Y
+                      // >> X - Places the bars in horizontal order, based on number of
+                      //        points & the width of the chart
+                      // >> Y - Places vertically based on scale
+                      .attr('x', function(d, i){
+                        return xScale(d.pais);
+                      })
+                      .attr('y', function(d){
+                        return yScale(d.casos);
+                      })
+
+                      // Step 3: Height & Width
+                      // >> Width - Based on barpadding and number of points in dataset
+                      // >> Height - Scale and height of the chart area
+                      .attr('width', (width / dataset.length) - barPadding)
+                      .attr('height', function(d){
+                        return height - yScale(d.casos);
+                      })
+                      .attr('fill', 'steelblue')
+
+                      // Step 4: Info for hover interaction
+                      .attr('class', function(d){
+                        return d.pais;
+                      })
+                      .attr('id', function(d){
+                        return d.casos;
+                      });
+
+                    // Renders the yAxis once the chart is finished
+                    // >> Moves it to the left 10 pixels so it doesn't overlap
+                    chart.append('g')
+                      .attr('class', 'axis')
+                      .attr('transform', 'translate(-10, 0)')
+                      .call(yAxis);
+
+                    // Appends the yAxis
+                    chart.append('g')
+                      .attr('class', 'axis')
+                      .attr('transform', 'translate(0,' + (height + 10) + ')')
+                      .call(xAxis);
+
+                    // Adds yAxis title
+                    chart.append('text')
+                      .text('Número de Casos')
+                      .attr('transform', 'translate(-70, -20)');
+                  }
+
+                  $(function(){
+                    // Presentar datos para el hover
+                    render();
+
+                    $('rect').mouseenter(function(){
+                      $('#pais').html(this.className.animVal);
+                      $('#Contagios').html($(this).attr('id'));
+                    });
+                  });
+
+                </script>
+            </div>
+
+            <!--------------------------->
+            <!-- Muertes por contagio -->
+            <!--------------------------->
+
+
+
+    </body>
+</html>
